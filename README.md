@@ -27,13 +27,18 @@ As represented on the diagram, the expected traffic flows are:
 
 <img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/215361316-aaf85bde-2c80-480a-80ae-95b91719fc4b.png">
 
-The FW NVA can ping the Concentrator NVA and is learning the branch prefixes supernet (192.168.0.0/16) advertised by the Concentrator NVA via BGP.
-The On-Prem branches know from the Concentrator NVA the the Azure VNET range (10.0.0.0/8) advertised by the FW NVA.
+The FW NVA can ping the Concentrator NVA and is learning the branch prefixes supernet (192.168.0.0/16) advertised by the Concentrator NVA (10.0.10.4) via BGP.
+The On-Prem branches know from the Concentrator NVA the the Azure VNET range (10.0.0.0/8) advertised by the FW NVA (10.0.0.5).
 
 From an NVA OS level (control-plane) the connectivity is okay. However pings are failing from the Hub NVA to Branch1.
 
+Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals/blob/main/README.md#311-nva-effective-routes--nva-routing-table-alignement), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA underlying VM’s Effective routes. 
+
+The FW NVA routing table containing the Branch prefixes (control-plane) is not enough, the FW NVA’s NIC must know about these prefixes too: data-plane connectivity is currently missing.
+
+### Solution: Align the data-plane (Effective routes) to the control-plane (NVA routing table)
+
+To do so, the “NvaRT” route table associated to the subnet of the NVA must be updated with a new UDR (“toBranches”) for the branches, with NH = 10.3.1.4 the IP address of the concentrator. (Remember also to enable “IP Forwarding” on the Concentrator’s NIC.)
 
 
-
-Since the branches are reachable from the Concentrator, this step consists in extending it to the Hub NVA.
-
+the Concentrator NVA subnet is still associated with the *ConcentratorRT*.

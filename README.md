@@ -19,7 +19,7 @@ As represented on the diagram, the expected traffic flows are:
 -	Azure to On-Prem: Spokes > FW NVA > Concentrator NVA > Branches
 -	On-Prem to Azure: Branches > Concentrator NVA > FW NVA > Spokes
 
-*Depending on your architecture the Concentrator NVA could instead be in a dedicated peered Spoke VNET. The conclusions we will reach are the same.*
+*Depending on your architecture, with little adjustments the Concentrator NVA could instead be in a dedicated peered Spoke VNET. The conclusions we will reach are the same.*
 
 ## 4.2.	Step1: Connectivity between the FW NVA and the Branches
 
@@ -33,6 +33,8 @@ The On-Prem branches know from the Concentrator NVA the the Azure VNET range (10
 From an NVA OS level (control-plane) the connectivity is okay. However pings are failing from the Hub NVA to Branch1.
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals/blob/main/README.md#311-nva-effective-routes--nva-routing-table-alignement), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA underlying VM’s Effective routes. 
+
+:arrow_right: **Whatever an NVA custom routing configuration is (static routes, BGP etc), the NVA routing table is by default not reflected in the NVA's Effective routes, creating a misalignment between the NVA control plane and the NVA data-plane.**
 
 The FW NVA routing table containing the Branch prefixes (control-plane) is not enough, the FW NVA’s NIC must know about these prefixes too: data-plane connectivity is currently missing.
 

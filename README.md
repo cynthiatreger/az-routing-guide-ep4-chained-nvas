@@ -8,7 +8,7 @@
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for dedicated Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET only. 
 
-For the sake of this guide, this security layer is provided by another 3rd Party NVA rather than by our native Azure Firewall. A second Cisco CSR ("*FW NVA*") is used for that purpose and deployed in a dedicated subnet in the Hub VNET (*FWsubnet*: 10.0.0.0/24). 
+This security layer is here provided by another 3rd Party NVA rather than by the native Azure Firewall. A second Cisco CSR ("*FW NVA*") is used for that purpose and deployed in a dedicated subnet in the Hub VNET (*FWsubnet*: 10.0.0.0/24). 
 
 To facilitate the management of branches being added/deleted or updated with new subnets, dynamic route advertisement (BGP) is run between the Concentrator NVA and the FW NVA.
 
@@ -31,7 +31,7 @@ The traffic flows between Spoke2 VNET and the On-Prem remain as in Episode #3:
 <img width="1122" alt="image" src="https://user-images.githubusercontent.com/110976272/215564791-ada61c2f-a144-4f8d-8f9f-34199d2f26ff.png">
 
 The FW NVA can ping the Concentrator NVA and is learning the branch prefixes supernet (192.168.0.0/16) advertised by the Concentrator NVA (10.0.10.4) via BGP.
-The On-Prem branches know from the Concentrator NVA the the Spoke1 Azure VNET range (10.1.0.0/16) advertised by the FW NVA (10.0.0.5).
+The On-Prem branches know from the Concentrator NVA the the Spoke1 Azure VNET range (10.1.0.0/16) advertised via BGP by the FW NVA (10.0.0.5).
 
 From an NVA OS level (control-plane) the connectivity is okay. However pings are failing from the Hub NVA to Branch1.
 
@@ -43,7 +43,7 @@ Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-
 
 The FW NVA routing table containing the Branch prefixes (control-plane) is not enough, the FW NVA’s NIC must know about these prefixes too: data-plane connectivity is currently missing.
 
-### 4.2.2. Solution: Align the data-plane (Effective routes) to the control-plane (NVA routing table)
+### 4.2.2. (Samoe old) solution: Align the data-plane (Effective routes) to the control-plane (NVA routing table)
 
 Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a route table must be created and associated to the subnet of the FW NVA with a UDR ("*toBranches*") to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4). 
 
@@ -58,14 +58,25 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 Now that the connectivity between the FW NVA and the On-Prem Branches via the Concentrator NVA is confirmed, in this section we will see how to extend this connectivity end-to-end and provide FW transit between the Spoke1 VNET and the Branches.
 
 ### 4.3.1. UDRs on the Spoke1 VMs
-
 A new route table is associated to the the Spoke1 subnets, with a UDR for the the branches (92.168.0.0/16) pointing at th FW NVA (Next-Hop = 10.0.0.5), that will create a "*User*" entry in the Effective routes of Spoke1VM for that prefix. Let's control with traceroute that the FW NVA is in the path:
 
 <img width="816" alt="image" src="https://user-images.githubusercontent.com/110976272/215566526-b9afd33f-9f6e-40e3-9d2a-69b419b914e3.png">
 
 :warning: Remember to enable “IP Forwarding” on the FW NVA’s NIC receiving the traffic, or the packets will be dropped.
 
-### 4.3.2. force tunneling from the Concentrator NVA to the FW NVA
+<img width="1151" alt="image" src="https://user-images.githubusercontent.com/110976272/215585616-e27c15c6-9056-473b-b513-d7e8f0ab7b6f.png">
+
+Connectivity between On-Prem and Spoke1 is achieved, however only traffic from Spoke1 to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute to Spoke1VM.
+
+:arrow_right: It’s not only about traffic from Azure to OnPrem, the On-Prem has to find the right way back to Azure too.
+
+### 4.3.2. Forcing traffic to Spoke1 from the Concentrator NVA into the FW NVA
+Although the Concentrator NVA learns the Spoke1 range (10.1.0.0/16) from the FW NVA via BGP, when the packet destined to Spoke1VM reaches the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC Effective routes. Due to the transitivity of the direct peering between the Hub VNET and Spoke1 VNET (see [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways)) traffic will be forwarded over the peering to Spoke1 VNET directly.
+
+One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA:
+
+<img width="706" alt="image" src="https://user-images.githubusercontent.com/110976272/215589546-2e6c06bc-d982-40fb-9ed7-0322f051cdcc.png">
+
 
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 02/02)

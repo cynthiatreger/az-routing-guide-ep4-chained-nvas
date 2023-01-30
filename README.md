@@ -64,7 +64,7 @@ A new route table is associated to the the Spoke1 subnets, with a UDR for the th
 
 :warning: Remember to enable “IP Forwarding” on the FW NVA’s NIC receiving the traffic, or the packets will be dropped.
 
-<img width="1151" alt="image" src="https://user-images.githubusercontent.com/110976272/215585616-e27c15c6-9056-473b-b513-d7e8f0ab7b6f.png">
+<img width="1149" alt="image" src="https://user-images.githubusercontent.com/110976272/215594263-b0e5a82c-7b72-4ec4-ba5c-5606cc2ab001.png">
 
 Connectivity between On-Prem and Spoke1 is achieved, however only traffic from Spoke1 to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute to Spoke1VM.
 
@@ -73,10 +73,9 @@ Connectivity between On-Prem and Spoke1 is achieved, however only traffic from S
 ### 4.3.2. Forcing traffic to Spoke1 from the Concentrator NVA into the FW NVA
 Although the Concentrator NVA learns the Spoke1 range (10.1.0.0/16) from the FW NVA via BGP, when the packet destined to Spoke1VM reaches the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC Effective routes. Due to the transitivity of the direct peering between the Hub VNET and Spoke1 VNET (see [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways)) traffic will be forwarded over the peering to Spoke1 VNET directly.
 
-One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA:
+One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA, as per the ConcentratorRT route table:
 
-<img width="706" alt="image" src="https://user-images.githubusercontent.com/110976272/215589546-2e6c06bc-d982-40fb-9ed7-0322f051cdcc.png">
-
+<img width="705" alt="image" src="https://user-images.githubusercontent.com/110976272/215595108-779f79c2-02ad-4fa5-ae25-e03860765190.png">
 
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 02/02)

@@ -12,6 +12,8 @@ A second Cisco CSR ("*FW NVA*") is used for that purpose and deployed in a dedic
 
 To facilitate the management of branches being added/deleted or updated with new subnets, dynamic route advertisement (BGP) is run between the Concentrator NVA and the FW NVA.
 
+
+
 The Spoke *SpokeRT* route table created in Episode #3 for direct connectivity between the Spoke VMs and the Concentrator NVA have been dissociated from the Spoke subnets.
 
 <img width="558" alt="image" src="https://user-images.githubusercontent.com/110976272/215452447-c7a73b77-28d2-4281-9c00-dd3345e75f21.png">
@@ -43,12 +45,25 @@ The FW NVA routing table containing the Branch prefixes (control-plane) is not e
 
 ### 4.2.2. Solution: Align the data-plane (Effective routes) to the control-plane (NVA routing table)
 
-Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a route table must be created and associated to the subnet of the FW NVA with a UDR ("toBranches") to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4). 
+Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a route table must be created and associated to the subnet of the FW NVA with a UDR ("*toBranches*") to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4). 
 
 <img width="817" alt="image" src="https://user-images.githubusercontent.com/110976272/215448424-747eec8d-9d69-474d-b381-f906c25af52c.png">
 
-(Note: the Concentrator NVA subnet is still associated with the *ConcentratorRT* route table containing an entry for its own branches.)
+(Note: the Concentrator NVA subnet is still associated with the *ConcentratorRT* route table containing a UDR for its own branches.)
 
 <img width="896" alt="image" src="https://user-images.githubusercontent.com/110976272/215454939-c3f9a28f-d652-4fe1-999e-b7f54b451a0a.png">
 
-Remember to also to enable “IP Forwarding” on the FW NVA’s NIC.
+## 4.3. Step 2: Branch Connectivity extended to the Spokes & FW NVA transit
+
+Now that the connectivity between the FW NVA and the On-Prem Branches via the Concentrator NVA is confirmed, in this section we will see how to extend this connectivity end-to-end between the Branches and the Spokes and provide FW transit for inspection.
+
+### 4.3.1. UDRs on the Spoke VMs
+
+The Spoke *SpokeRT* route table created in Episode #3 and dissociated from the Spoke subnets at the beginning of this Episode will be reactivated: the previous UDR configured for direct branch connectivity via the Concentrator NVA is updated to point at the FW NVA (Next-Hop = 10.0.0.5).
+
+:warning: Remember to enable “IP Forwarding” on the FW NVA’s NIC receiving the traffic, or the packets will be dropped.
+
+### 4.3.2. force tunneling from the Concentrator NVA to the FW NVA
+
+##
+### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 02/02)

@@ -107,6 +107,8 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 Finally both connectivity & FW insection between Azure resources and branches connected to a Concentrator NVA have been achieved!
 
+<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/215908336-68a445a0-1be1-4cad-bc31-c291f00ab6cb.png">
+
 But admittedly with quite some complexity. Fortunately there is room for improvement, as we will find out in the next Episode.
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 02/02)

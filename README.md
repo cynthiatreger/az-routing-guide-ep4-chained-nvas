@@ -4,6 +4,20 @@
 
 *Introduction note: This guide aims at providing a better understanding of the Azure routing mechanisms and how they translate from On-Prem networking. The focus will be on private routing in Hub & Spoke topologies. For clarity, network security and resiliency best practices as well as internet breakout considerations have been left out of this guide.*
 ##
+[4.1. Expected traffic flows and test environment description](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#41-expected-traffic-flows-and-test-environment-description)
+
+[4.2. Step1: Connectivity segment between the FW NVA and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#42step1-connectivity-segment-between-the-fw-nva-and-the-branches)
+
+&emsp;[4.2.1. FW NVA *Effective routes* vs FW NVA routing table](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#421-fw-nva-effective-routes-vs-fw-nva-routing-table)
+
+&emsp;[4.2.2. (Same old) solution: Align the data-plane (*Effective routes*) to the control-plane (NVA routing table)](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#422-same-old-solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table)
+
+[4.3. Step 2: End-to-end Connectivity & FW NVA transit between Spoke1 VNET and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#43-step-2-end-to-end-connectivity--fw-nva-transit-between-spoke1-vnet-and-the-branches)
+
+&emsp;[4.3.1.UDRs on the Spoke1 subnets](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#431-udrs-on-the-spoke1-subnets)
+
+&emsp;[Forcing traffic to Spoke1 from the Concentrator NVA into the FW NVA](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#432-forcing-traffic-to-spoke1-from-the-concentrator-nva-into-the-fw-nva)
+##
 # 4.1. Expected traffic flows and test environment description
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for a limited set Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET. 
@@ -77,7 +91,7 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 Now that the connectivity between the FW NVA and the On-Prem branches via the Concentrator NVA is confirmed, in this section we will see how to extend this connectivity end-to-end and provide FW transit between the Spoke1 VNET and the branches.
 
-## 4.3.1. UDRs on the Spoke1 VMs
+## 4.3.1. UDRs on the Spoke1 subnets
 
 Based on the default [VNET peering rules](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) discussed in [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways), and since Spoke1 VNET has been dissociated from any *Route table* at the beginning of this article, the Spoke1 VMs don't have visibility of any IP range outside of the Spoke1 and Hub VNETs.
 
@@ -115,4 +129,4 @@ Finally both connectivity & FW insection between Azure resources and branches co
 
 But admittedly with quite some complexity. Fortunately there is room for improvement, as we will find out in the next Episode.
 ##
-### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 02/02)
+### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)

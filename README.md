@@ -99,9 +99,9 @@ Connectivity between the On-Prem and Spoke1 VNET is achieved, however only traff
 
 ## 4.3.2. Forcing traffic to Spoke1 from the Concentrator NVA into the FW NVA
 
-Although the Concentrator NVA learns the Spoke1 range (10.1.0.0/16) from the FW NVA via BGP, when packets destined to Spoke1VM reach the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC *Effective routes*. Due to the transitivity of the direct peering between the Hub VNET and Spoke1 VNET (see [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways)) traffic will be forwarded over the peering to Spoke1 VNET directly.
+Although the Concentrator NVA learns via BGP the Spoke1 range (10.1.0.0/16) **from the FW NVA**, when packets destined to Spoke1VM reach the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC *Effective routes* and forwarded over the peering to Spoke1 VNET directly.
 
-One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA:
+One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA. The "ConcentratorRT" *Route table* is updated accordingly with the "toSpoke1" UDR:
 
 <img width="705" alt="image" src="https://user-images.githubusercontent.com/110976272/215595108-779f79c2-02ad-4fa5-ae25-e03860765190.png">
 

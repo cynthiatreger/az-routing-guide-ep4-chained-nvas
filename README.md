@@ -69,7 +69,7 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 <img width="817" alt="image" src="https://user-images.githubusercontent.com/110976272/215448424-747eec8d-9d69-474d-b381-f906c25af52c.png">
 
-... resulting in successful connectivity between the FW NVA and the On-Prem branches.
+... resulting in successful connectivity between the FW NVA and the On-Prem branches:
 
 <img width="900" alt="image" src="https://user-images.githubusercontent.com/110976272/215562521-9ea33195-9c46-4de0-b2e8-e7842c711a6f.png">
 
@@ -83,7 +83,7 @@ Based on the default [VNET peering rules](https://learn.microsoft.com/en-us/azur
 
 A UDR is hence required to bring the On-Prem prefixes knowledge to the Spoke1 subnets.
 
-This is achieved by associating a new *Route table* to all or a selected set of subnets in the Spoke1 VNET, with a UDR for the On-Prem branches (192.168.0.0/16) pointing to the FW NVA (Next-Hop = 10.0.0.5).
+This is achieved by associating a new *Route table* to the Spoke1 subnets, with a UDR for the On-Prem branches (192.168.0.0/16) pointing to the FW NVA (Next-Hop = 10.0.0.5).
 
 <img width="816" alt="image" src="https://user-images.githubusercontent.com/110976272/215566526-b9afd33f-9f6e-40e3-9d2a-69b419b914e3.png">
 
@@ -105,9 +105,13 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 <img width="705" alt="image" src="https://user-images.githubusercontent.com/110976272/215595108-779f79c2-02ad-4fa5-ae25-e03860765190.png">
 
-Finally both connectivity & FW insection between Azure resources and branches connected to a Concentrator NVA have been achieved!
+This completes the return traffic inspection of traffic from the On-Prem branches to Spoke1VNET:
 
 <img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/215908336-68a445a0-1be1-4cad-bc31-c291f00ab6cb.png">
+
+:arrow_right: *Default* routes overridden by UDRs become "Invalid" and a new *User* entry is added at the bottom of the *Effective routes*. 
+
+Finally both connectivity & FW insection between Azure resources and branches connected to a Concentrator NVA have been achieved!
 
 But admittedly with quite some complexity. Fortunately there is room for improvement, as we will find out in the next Episode.
 ##

@@ -9,7 +9,7 @@
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for dedicated Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET only. 
 
-This security layer is here provided by another 3rd Party NVA rather than by the native Azure Firewall. A second Cisco CSR ("*FW NVA*") is used for that purpose and deployed in a dedicated subnet in the Hub VNET (*FWsubnet*: 10.0.0.0/24). 
+This security layer is here provided by another 3rd Party NVA rather than by the native Azure Firewall. A second Cisco CSR (*FW NVA*) is used for that purpose and deployed in a dedicated subnet in the Hub VNET (*FWsubnet*: 10.0.0.0/24). 
 
 To facilitate the management of branches being added/deleted or updated with new subnets, dynamic route advertisement (BGP) is run between the Concentrator NVA and the FW NVA.
 
@@ -46,7 +46,7 @@ The FW NVA routing table containing the Branch prefixes (control-plane) is not e
 
 ### 4.2.2. (Same old) solution: Align the data-plane (*Effective routes*) to the control-plane (NVA routing table)
 
-Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a *route table* must be created and associated to the subnet of the FW NVA with a UDR ("*toBranches*") to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4). 
+Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a *route table* must be created and associated to the subnet of the FW NVA with a UDR (*toBranches*) to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4). 
 
 <img width="817" alt="image" src="https://user-images.githubusercontent.com/110976272/215448424-747eec8d-9d69-474d-b381-f906c25af52c.png">
 
@@ -60,7 +60,7 @@ Now that the connectivity between the FW NVA and the On-Prem branches via the Co
 
 ### 4.3.1. UDRs on the Spoke1 VMs
 
-A new route table is associated to the the subnets in Spoke1 VNET, with a UDR for the the branches (92.168.0.0/16) pointing at th FW NVA (Next-Hop = 10.0.0.5), that will create a "*User*" entry in the *Effective* routes of Spoke1VM for that prefix. Let's control with traceroute that the FW NVA is in the path:
+A new route table is associated to the the subnets in Spoke1 VNET, with a UDR for the the branches (92.168.0.0/16) pointing at th FW NVA (Next-Hop = 10.0.0.5), that will create a *User* entry in the *Effective* routes of Spoke1VM for that prefix. Let's control with traceroute that the FW NVA is in the path:
 
 <img width="816" alt="image" src="https://user-images.githubusercontent.com/110976272/215566526-b9afd33f-9f6e-40e3-9d2a-69b419b914e3.png">
 
@@ -80,12 +80,8 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 <img width="705" alt="image" src="https://user-images.githubusercontent.com/110976272/215595108-779f79c2-02ad-4fa5-ae25-e03860765190.png">
 
-Finally connectivity 1 FW insection between Azure resources and branches connected to a Concentrator NVA has been achieved!
-But admittedly with quite some complexity. Fortunately there is room for improvement.
+Finally connectivity & FW insection between Azure resources and branches connected to a Concentrator NVA have been achieved!
 
-##
-### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 03/02)
-
-
+But admittedly with quite some complexity. Fortunately there is room for improvement, as we will find out in the next Episode.
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out 02/02)

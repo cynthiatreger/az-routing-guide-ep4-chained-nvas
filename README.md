@@ -107,7 +107,7 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 This completes the return traffic inspection of traffic from the On-Prem branches to Spoke1VNET:
 
-<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/215908336-68a445a0-1be1-4cad-bc31-c291f00ab6cb.png">
+<img width="1195" alt="image" src="https://user-images.githubusercontent.com/110976272/215909546-646c955c-efa5-403e-9bda-6194d698dc1e.png">
 
 :arrow_right: *Default* routes overridden by UDRs become "Invalid" and a new *User* entry is added at the bottom of the *Effective routes*. 
 

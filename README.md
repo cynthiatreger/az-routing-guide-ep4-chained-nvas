@@ -17,15 +17,7 @@ The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs
 
 Expected traffic flows:
 
-<img width="558" alt="image" src="https://user-images.githubusercontent.com/110976272/215558452-b22e0f2d-6bfd-4372-8881-6610e41dcd23.png">
-
-As represented on the diagram, the expected traffic flows between Spoke1 VNET and the On-Prem are:
--	Azure to On-Prem: Spoke1 VMs > FW NVA > Concentrator NVA > Branches
--	On-Prem to Azure: Branches > Concentrator NVA > FW NVA > Spoke1 VMs
-
-The traffic flows between Spoke2 VNET and the On-Prem remain as in Episode #3:
--	Azure to On-Prem: Spoke2 VMs > Concentrator NVA > Branches
--	On-Prem to Azure: Branches > Concentrator NVA > Spoke2 VMs
+<img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/215856350-b3ceb0f9-e0b0-425c-a29d-afff4484c8ce.png">
 
 ## 4.2.	Step1: Connectivity between the FW NVA and the Branches
 

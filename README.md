@@ -5,28 +5,28 @@
 *Introduction note: This guide aims at providing a better understanding of the Azure routing mechanisms and how they translate from On-Prem networking. The focus will be on private routing in Hub & Spoke topologies. For clarity, network security and resiliency best practices as well as internet breakout considerations have been left out of this guide.*
 ##
 
-# 4.1. Test environment description
+# 4.1. Expected traffic flows and test environment description
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for a limited set Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET. 
 
+Expected traffic flows:
+
+<img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/215856350-b3ceb0f9-e0b0-425c-a29d-afff4484c8ce.png">
 To illustrate the usage of BGP, this security layer is provided by another 3rd Party NVA rather than by the native Azure Firewall. For that purpose, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
 To facilitate the management of branches being added/deleted or updated with new subnets, dynamic route advertisement (BGP) is run between the Concentrator NVA and the FW NVA.
 
 The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs for direct connectivity between the Spoke VMs and the Concentrator NVA has been dissociated from all the Spoke1 VNET subnets.
 
-Expected traffic flows:
+## 4.2.	Step1: Connectivity segment between the FW NVA and the branches
 
-<img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/215856350-b3ceb0f9-e0b0-425c-a29d-afff4484c8ce.png">
-
-## 4.2.	Step1: Connectivity between the FW NVA and the Branches
-
-### 4.2.1. FW NVA Effective routes vs FW NVA routing table
+### 4.2.1. FW NVA *Effective routes* vs FW NVA routing table
 
 <img width="1122" alt="image" src="https://user-images.githubusercontent.com/110976272/215564791-ada61c2f-a144-4f8d-8f9f-34199d2f26ff.png">
 
-The FW NVA can ping the Concentrator NVA and is learning the branch prefixes supernet (192.168.0.0/16) advertised by the Concentrator NVA (10.0.10.4) via BGP.
-The On-Prem branches know from the Concentrator NVA the the Spoke1 Azure VNET range (10.1.0.0/16) advertised via BGP by the FW NVA (10.0.0.5).
+The FW NVA can ping the Concentrator NVA and is learning via BGP the branch prefixes supernet (192.168.0.0/16) advertised by the Concentrator NVA (10.0.10.4).
+
+The On-Prem branches know from the Concentrator NVA the Spoke1 Azure VNET range (10.1.0.0/16) advertised via BGP by the FW NVA (10.0.0.5) to the Concentrator NVA.
 
 From an NVA OS level (control-plane) the connectivity is okay. However pings are failing from the Hub NVA to Branch1.
 
@@ -48,7 +48,7 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 <img width="900" alt="image" src="https://user-images.githubusercontent.com/110976272/215562521-9ea33195-9c46-4de0-b2e8-e7842c711a6f.png">
 
-## 4.3. Step 2: Branch Connectivity & FW NVA transit for Spoke1 VNET
+## 4.3. Step 2: End-to-end Connectivity & FW NVA transit between Spoke1 VNET and the branches
 
 Now that the connectivity between the FW NVA and the On-Prem branches via the Concentrator NVA is confirmed, in this section we will see how to extend this connectivity end-to-end and provide FW transit between the Spoke1 VNET and the branches.
 

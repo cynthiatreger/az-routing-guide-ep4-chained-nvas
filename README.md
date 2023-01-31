@@ -22,7 +22,7 @@ The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs
 
 ### 4.2.1. FW NVA *Effective routes* vs FW NVA routing table
 
-<img width="1122" alt="image" src="https://user-images.githubusercontent.com/110976272/215564791-ada61c2f-a144-4f8d-8f9f-34199d2f26ff.png">
+<img width="1122" alt="image" src="https://user-images.githubusercontent.com/110976272/215866207-ea917e9c-d35c-422c-b96d-b50693adbef2.png">
 
 The FW NVA can ping the Concentrator NVA and is learning via BGP the branch prefixes supernet (192.168.0.0/16) advertised by the Concentrator NVA (10.0.10.4).
 

@@ -7,13 +7,15 @@
 
 # 4.1. Test environment description
 
-The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for dedicated Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET only. 
+The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for a limited set Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET. 
 
-This security layer is here provided by another 3rd Party NVA rather than by the native Azure Firewall. A second Cisco CSR (*FW NVA*) is used for that purpose and deployed in a dedicated subnet in the Hub VNET (*FWsubnet*: 10.0.0.0/24). 
+To illustrate the usage of BGP, this security layer is provided by another 3rd Party NVA rather than by the native Azure Firewall. For that purpose, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
 To facilitate the management of branches being added/deleted or updated with new subnets, dynamic route advertisement (BGP) is run between the Concentrator NVA and the FW NVA.
 
-The *SpokeRT* *route table* created in Episode #3 and applied to the Spoke VNETs for direct connectivity between the Spoke VMs and the Concentrator NVA has been dissociated from the Spoke1 VNET subnets.
+The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs for direct connectivity between the Spoke VMs and the Concentrator NVA has been dissociated from all the Spoke1 VNET subnets.
+
+Expected traffic flows:
 
 <img width="558" alt="image" src="https://user-images.githubusercontent.com/110976272/215558452-b22e0f2d-6bfd-4372-8881-6610e41dcd23.png">
 

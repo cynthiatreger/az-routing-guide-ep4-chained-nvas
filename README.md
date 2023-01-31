@@ -89,9 +89,9 @@ This is achieved by associating a new *Route table* to all or a selected set of 
 
 :warning: Remember to enable “IP Forwarding” on the FW NVA’s NIC receiving the traffic, or the packets will be dropped.
 
-Let's check with traceroute that the FW NVA is in the path:
+Let's check using traceroutes that the FW NVA is in the path:
 
-<img width="1149" alt="image" src="https://user-images.githubusercontent.com/110976272/215594263-b0e5a82c-7b72-4ec4-ba5c-5606cc2ab001.png">
+<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/215904164-a17abfcc-15b0-4f87-9c24-5574dd95dce0.png">
 
 Connectivity between the On-Prem and Spoke1 VNET is achieved, however only traffic from Spoke1 VNET to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute to Spoke1VM.
 

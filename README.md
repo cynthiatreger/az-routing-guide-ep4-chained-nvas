@@ -4,19 +4,21 @@
 
 *Introduction note: This guide aims at providing a better understanding of the Azure routing mechanisms and how they translate from On-Prem networking. The focus will be on private routing in Hub & Spoke topologies. For clarity, network security and resiliency best practices as well as internet breakout considerations have been left out of this guide.*
 ##
-[4.1. Test environment description and expected traffic flows ](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#41-test-environment-description-and-expected-traffic-flows)
+[4.1. Test environment description and expected traffic flows ](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#41-test-environment-description-and-expected-traffic-flows)
 
-[4.2. Step1: Connectivity between the FW NVA and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#42step1-connectivity-between-the-fw-nva-and-the-branches)
+[4.2. Step1: Connectivity between the FW NVA and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#42step1-connectivity-between-the-fw-nva-and-the-branches)
 
-&emsp;[4.2.1. FW NVA *Effective routes* vs FW NVA routing table](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#421-fw-nva-effective-routes-vs-fw-nva-routing-table)
+&emsp;[4.2.1. Current connectivity recap](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#421-current-connectivity-recap)
 
-&emsp;[4.2.2. Solution: Align the FW NVA Effective routes to the FW NVA routing table](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#422-solution-align-the-fw-nva-effective-routes-to-the-fw-nva-routing-table)
+&emsp;[4.2.2. FW NVA Effective routes and FW NVA routing table misalignment](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#422-fw-nva-effective-routes-and-fw-nva-routing-table-misalignment)
 
-[4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#43-step-2-end-to-end-connectivity-and-fw-nva-transit-between-spoke1-vnet-and-the-branches)
+&emsp;[4.2.3. Solution: Align the FW NVA Effective routes to the FW NVA routing table](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#423-solution-align-the-fw-nva-effective-routes-to-the-fw-nva-routing-table)
 
-&emsp;[4.3.1. Align the Spoke1 VMs Effective routes to the FW NVA routing table for Spoke1 => On-Prem FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#431-align-the-spoke1-vms-effective-routes-to-the-fw-nva-routing-table-for-spoke1--on-prem-fw-transit)
+[4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#43-step-2-end-to-end-connectivity-and-fw-nva-transit-between-spoke1-vnet-and-the-branches)
 
-&emsp;[4.3.2. Align the Concentrator NVA Effective routes to the FW NVA routing table for On-Prem => Spoke1 FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#432-align-the-concentrator-nva-effective-routes-to-the-fw-nva-routing-table-for-on-prem--spoke1-fw-transit)
+&emsp;[4.3.1. Spoke1 => On-Prem FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#431-spoke1--on-prem-fw-transit)
+
+&emsp;[4.3.2. On-Prem => Spoke1 FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#432-on-prem--spoke1-fw-transit)
 ##
 # 4.1. Test environment description and expected traffic flows 
 
@@ -79,7 +81,7 @@ The result is successful connectivity between the FW NVA and the On-Prem branche
 
 Now that the connectivity between the FW NVA and the On-Prem branches via the Concentrator NVA is confirmed, in this section we will see how to extend this connectivity end-to-end and provide FW transit between the Spoke1 VNET and the branches.
 
-## 4.3.1. Align the Spoke1 VMs *Effective routes* to the FW NVA routing table for Spoke1 => On-Prem FW transit
+## 4.3.1. Spoke1 => On-Prem FW transit
 
 Based on the default [VNET peering rules](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) discussed in [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways), and since Spoke1 VNET has been dissociated from any *Route table* at the beginning of this article, the Spoke1 VMs don't have visibility of any IP range outside of the Spoke1 and Hub VNETs.
 
@@ -101,7 +103,7 @@ Connectivity between the On-Prem and Spoke1 VNET is achieved. However only traff
 
 :arrow_right: It’s not only about traffic from Azure to OnPrem, the On-Prem has to find the right way back to Azure too.
 
-## 4.3.2. Align the Concentrator NVA *Effective routes* to the FW NVA routing table for On-Prem => Spoke1 FW transit
+## 4.3.2. On-Prem => Spoke1 FW transit
 
 When packets destined to Spoke1VM reach the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC *Effective routes* and forwarded over the peering to Spoke1 VNET directly.
 

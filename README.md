@@ -10,13 +10,13 @@
 
 &emsp;[4.2.1. FW NVA *Effective routes* vs FW NVA routing table](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#421-fw-nva-effective-routes-vs-fw-nva-routing-table)
 
-&emsp;[4.2.2. (Same old) solution: Align the data-plane (*Effective routes*) to the control-plane (NVA routing table)](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#422-same-old-solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table)
+&emsp;[4.2.2. Solution: Align the FW NVA Effective routes to the FW NVA routing table](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#422-solution-align-the-fw-nva-effective-routes-to-the-fw-nva-routing-table)
 
-[4.3. Step 2: End-to-end Connectivity & FW NVA transit between Spoke1 VNET and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#43-step-2-end-to-end-connectivity--fw-nva-transit-between-spoke1-vnet-and-the-branches)
+[4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#43-step-2-end-to-end-connectivity-and-fw-nva-transit-between-spoke1-vnet-and-the-branches)
 
-&emsp;[4.3.1.UDRs on the Spoke1 subnets](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#431-udrs-on-the-spoke1-subnets)
+&emsp;[4.3.1. Align the Spoke1 VMs Effective routes to the FW NVA routing table for Spoke1 => On-Prem FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#431-align-the-spoke1-vms-effective-routes-to-the-fw-nva-routing-table-for-spoke1--on-prem-fw-transit)
 
-&emsp;[Forcing traffic to Spoke1 from the Concentrator NVA into the FW NVA](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#432-forcing-traffic-to-spoke1-from-the-concentrator-nva-into-the-fw-nva)
+&emsp;[4.3.2. Align the Concentrator NVA Effective routes to the FW NVA routing table for On-Prem => Spoke1 FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#432-align-the-concentrator-nva-effective-routes-to-the-fw-nva-routing-table-for-on-prem--spoke1-fw-transit)
 ##
 # 4.1. Test environment description and expected traffic flows 
 

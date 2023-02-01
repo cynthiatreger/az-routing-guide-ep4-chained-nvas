@@ -22,7 +22,7 @@
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having firewall inspection between the On-Prem and Azure.
 
-It is possible in Azure to customize routing and for example provide FW inspection to specific workloads only. Let's consider such filtering for Spoke1 while Spoke2 will keep bypassing the FW.
+It is possible in Azure to customize routing to for example provide FW inspection to specific workloads only. Let's consider such filtering for Spoke1 while Spoke2 will keep bypassing the FW.
 
 For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
@@ -45,7 +45,7 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
     - The Concentrator NVA routing table includes various subnets of the 192.168.0.0/16 range
     - successful pings
 
-- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets as well as on the Concentrator NVA.
+- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets as well as on the Concentrator NVA subnet.
 
 ## 4.2.2. FW NVA routing table vs FW NVA *Effective routes*
 
@@ -55,18 +55,15 @@ From a traditional routing perspective, static routing or BGP would have been us
 
 Let's consider the static routing approach and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
-update diagram!!!
-<img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216074767-ad3e9ad9-47d1-4fca-bbc8-9513fe87ddfc.png">
+<img width="1128" alt="image" src="https://user-images.githubusercontent.com/110976272/216169050-7db9cb26-69ed-4230-8ca2-34898557358d.png">
 
-Despite the On-Prem branches being reachable from the Concentrator NVA, despite validated connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
+Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
 
  ### 4.2.1.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
 
-update diagram!!!
-
-<img width="558" alt="image" src="https://user-images.githubusercontent.com/110976272/215434704-c4f2b2b2-6de0-4cd3-905e-0e92b71f79a1.png">
+<img width="487" alt="image" src="https://user-images.githubusercontent.com/110976272/216169544-ef166f6d-e998-4b74-b741-d658dbd24741.png">
 
 :arrow_right: **Whatever an NVA routing configuration is (static routes, BGP etc), the NVA routing table is by default not reflected in the NVA's *Effective routes*, creating a misalignment between the NVA control plane and the NVA data-plane.**
 
@@ -78,7 +75,7 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 <img width="817" alt="image" src="https://user-images.githubusercontent.com/110976272/215448424-747eec8d-9d69-474d-b381-f906c25af52c.png">
 
-... resulting in successful connectivity between the FW NVA and the On-Prem branches:
+The result is successful connectivity between the FW NVA and the On-Prem branches:
 
 <img width="924" alt="image" src="https://user-images.githubusercontent.com/110976272/216075824-ddd5377c-b2b2-4213-8ab9-802b9f3afb9b.png">
 

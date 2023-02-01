@@ -1,6 +1,6 @@
 ### [< BACK TO THE MAIN MENU](https://github.com/cynthiatreger/az-routing-guide-intro)
 ##
-# Episode #4: Chained NVAs
+# Episode #4: Chained NVAs for FW inspection
 
 *Introduction note: This guide aims at providing a better understanding of the Azure routing mechanisms and how they translate from On-Prem networking. The focus will be on private routing in Hub & Spoke topologies. For clarity, network security and resiliency best practices as well as internet breakout considerations have been left out of this guide.*
 ##
@@ -20,52 +20,51 @@
 ##
 # 4.1. Test environment description and expected traffic flows 
 
-The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure.
+The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having firewall inspection between the On-Prem and Azure.
 
 It is possible in Azure to customize routing and for example provide FW inspection to specific workloads only. Let's consider such filtering for Spoke1 while Spoke2 will keep bypassing the FW.
+
+For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
 Expected traffic flows:
 
 <img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
 
-For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
-
-The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs for direct connectivity between the Spoke VMs and the Concentrator NVA has been dissociated from all the Spoke1 VNET subnets.
+The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured in Episode #3 for direct connectivity between the Azure VMs and the On-Prem via the Concentrator NVA has been dissociated from all the Spoke1 subnets as FW transit is now required for this VNET. We will see further in this article how to achieve this. The "SpokeRT" *Route table* remains associated to the Spoke2 subnets.
 
 # 4.2.	Step1: Connectivity between the FW NVA and the branches
 
-## 4.2.1. FW NVA *Effective routes* vs FW NVA routing table
+ ## 4.2.1. Current connectivity recap
 
- ### 4.2.1.1. Episode #3 recap
+- Reachability between VMs within the Hub VNET and to the peered VNETs is established by default
+    - the NVAs can reach each other and any VM of our test environment
+    - unless there are any UDRs configured, by default there won't be any connectivity further than the scope of the Hub VNETs and its Spokes
 
- As seen in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals):
- - Data plane reachability between VMs within the Hub VNET and to the peered VNETs is established by default (successful pings between the FW NVA and the Concentrator NVA).
+- Connectivity between the Concentrator NVA and the On-Prem has been validated in Episode #3:
+    - The On-Prem branches learn the overall 10/8 Azure range from the Concentrator NVA 
+    - The Concentrator NVA routing table includes various subnets of the 192.168.0.0/16 range
+    - successful pings
 
--  The On-Prem branches learn the overall 10/8 Azure range from the Concentrator NVA. Connectivity to the On-Prem branches from the Concentrator NVA is confirmed by its routing table and the successful pings.
+- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets as well as on the Concentrator NVA.
 
-- the Concentrator NVA didn’t have the On-Prem prefixes in its Effective routes, requiring its subnet to be associated to a *Route table* ("ConcentratorRT") with the 192.16.0.0/16 UDR:
+## 4.2.2. FW NVA routing table vs FW NVA *Effective routes*
 
-<img width="688" alt="image" src="https://user-images.githubusercontent.com/110976272/215297079-9faf1ef6-b1d3-477c-b612-0d49563af5e1.png">
+### 4.2.2.1. NVAs routing table analysis
 
- ### 4.2.1.2. NVAs routing table analysis
+From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity. 
 
- Let's now focus on the OS-level routing between the FW NVA and the Concentrator NVA:
+Let's consider the static routing approach and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
-- FW NVA:
-    - advertises via BGP the specific Spoke1 VNET range (10.1.0.0/16) to the Concentrator NVA
-    - learns via bGP the On-Prem branch prefixes supernet (192.168.0.0/16) from the Concentrator NVA: Next-Hop = 10.0.10.4
-
-- Concentrator NVA:
-    - advertises via BGP the OnPrem branch prefixes supernet (192.168.0.0/16) to the FW NVA
-    - learns the Spoke1 VNET range via BGP from the FW NVA: Next-Hop = 10.0.0.5
-
+update diagram!!!
 <img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216074767-ad3e9ad9-47d1-4fca-bbc8-9513fe87ddfc.png">
 
-From an NVA OS level (control-plane/routing table) the connectivity is okay. However pings are failing from the Hub NVA to Branch1.
+Despite the On-Prem branches being reachable from the Concentrator NVA, despite validated connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
 
- ### 4.2.1.3. FW NVA *Effective routes* and FW NVA routing table misalignment
+ ### 4.2.1.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
+
+update diagram!!!
 
 <img width="558" alt="image" src="https://user-images.githubusercontent.com/110976272/215434704-c4f2b2b2-6de0-4cd3-905e-0e92b71f79a1.png">
 
@@ -73,11 +72,7 @@ Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-
 
 The FW NVA routing table containing the On-Prem branch prefixes (control-plane) is not enough, the FW NVA’s NIC must know about these On-Prem prefixes too: data-plane connectivity is currently missing.
 
-This also reminds on the reason why, in [Epsiode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), the Concentrator NVA didn’t have by default its reachable On-Prem prefixes in its own *Effective routes*, requiring its subnet to be associated to a *Route table* ("ConcentratorRT") with the 192.16.0.0/16 UDR:
-
-<img width="688" alt="image" src="https://user-images.githubusercontent.com/110976272/215297079-9faf1ef6-b1d3-477c-b612-0d49563af5e1.png">
-
-## 4.2.2. Solution: Align the FW NVA *Effective routes* to the FW NVA routing table
+## 4.2.3. Solution: Align the FW NVA *Effective routes* to the FW NVA routing table
 
 Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a *Route table* must be created (here named "NvaRT") and associated to the subnet of the FW NVA with a UDR ("toBranches") pointing to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4):
 

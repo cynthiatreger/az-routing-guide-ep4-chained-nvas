@@ -26,7 +26,7 @@ It is possible in Azure to customize routing and for example provide FW inspecti
 
 Expected traffic flows:
 
-<img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/215856350-b3ceb0f9-e0b0-425c-a29d-afff4484c8ce.png">
+<img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
 
 For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
@@ -51,8 +51,6 @@ The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs
 
  Let's now focus on the OS-level routing between the FW NVA and the Concentrator NVA:
 
- <capture routing table>
-
 - FW NVA:
     - advertises via BGP the specific Spoke1 VNET range (10.1.0.0/16) to the Concentrator NVA
     - learns via bGP the On-Prem branch prefixes supernet (192.168.0.0/16) from the Concentrator NVA: Next-Hop = 10.0.10.4
@@ -61,8 +59,7 @@ The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs
     - advertises via BGP the OnPrem branch prefixes supernet (192.168.0.0/16) to the FW NVA
     - learns the Spoke1 VNET range via BGP from the FW NVA: Next-Hop = 10.0.0.5
 
-<img width="1122" alt="image" src="https://user-images.githubusercontent.com/110976272/215866207-ea917e9c-d35c-422c-b96d-b50693adbef2.png">
-
+<img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216074767-ad3e9ad9-47d1-4fca-bbc8-9513fe87ddfc.png">
 
 From an NVA OS level (control-plane/routing table) the connectivity is okay. However pings are failing from the Hub NVA to Branch1.
 
@@ -88,7 +85,7 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 ... resulting in successful connectivity between the FW NVA and the On-Prem branches:
 
-<img width="900" alt="image" src="https://user-images.githubusercontent.com/110976272/215562521-9ea33195-9c46-4de0-b2e8-e7842c711a6f.png">
+<img width="924" alt="image" src="https://user-images.githubusercontent.com/110976272/216075824-ddd5377c-b2b2-4213-8ab9-802b9f3afb9b.png">
 
 # 4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches
 
@@ -110,7 +107,7 @@ This is achieved by associating a new *Route table* to the Spoke1 subnets, with 
 
 Let's check using traceroutes that the FW NVA is in the path:
 
-<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/215904164-a17abfcc-15b0-4f87-9c24-5574dd95dce0.png">
+<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/216076362-fef6da09-1345-43c0-996e-e34a0fb792bd.png">
 
 Connectivity between the On-Prem and Spoke1 VNET is achieved. However only traffic from Spoke1 VNET to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute to Spoke1VM.
 
@@ -126,7 +123,7 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 This completes the return traffic inspection of traffic from the On-Prem branches to Spoke1VNET:
 
-<img width="1195" alt="image" src="https://user-images.githubusercontent.com/110976272/215909546-646c955c-efa5-403e-9bda-6194d698dc1e.png">
+<img width="1196" alt="image" src="https://user-images.githubusercontent.com/110976272/216076566-5242f367-6540-47fd-a89f-f8797f562a25.png">
 
 :arrow_right: *Default* routes overridden by UDRs become "Invalid" and a new *User* entry is added at the bottom of the *Effective routes*. 
 

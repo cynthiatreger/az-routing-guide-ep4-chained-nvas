@@ -1,6 +1,6 @@
 ### [< BACK TO THE MAIN MENU](https://github.com/cynthiatreger/az-routing-guide-intro)
 ##
-# Episode #4: Chained NVAs & BGP
+# Episode #4: Chained NVAs
 
 *Introduction note: This guide aims at providing a better understanding of the Azure routing mechanisms and how they translate from On-Prem networking. The focus will be on private routing in Hub & Spoke topologies. For clarity, network security and resiliency best practices as well as internet breakout considerations have been left out of this guide.*
 ##
@@ -20,14 +20,15 @@
 ##
 # 4.1. Test environment description and expected traffic flows 
 
-The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure, either for the entire Cloud environment or for a limited set of Spoke VNETs only. Here we will consider this requirement for Spoke1 VNET. 
+The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having a firewall between the On-Prem and Azure.
+
+It is possible in Azure to customize routing and for example provide FW inspection to specific workloads only. Let's consider such filtering for Spoke1 while Spoke2 will keep bypassing the FW.
 
 Expected traffic flows:
 
 <img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/215856350-b3ceb0f9-e0b0-425c-a29d-afff4484c8ce.png">
-To illustrate the usage of BGP, this security layer is provided by another 3rd Party NVA rather than by the native Azure Firewall. For that purpose, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
-To facilitate the management of branches being added/deleted or updated with new subnets, dynamic route advertisement (BGP) is run between the Concentrator NVA and the FW NVA.
+For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
 The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs for direct connectivity between the Spoke VMs and the Concentrator NVA has been dissociated from all the Spoke1 VNET subnets.
 
@@ -48,7 +49,9 @@ The "SpokeRT" *route table* created in Episode #3 and applied to the Spoke VNETs
 
  ### 4.2.1.2. NVAs routing table analysis
 
- Let's now focus on the BGP route exchanges between the FW NVA and the Concentrator NVA:
+ Let's now focus on the OS-level routing between the FW NVA and the Concentrator NVA:
+
+ <capture routing table>
 
 - FW NVA:
     - advertises via BGP the specific Spoke1 VNET range (10.1.0.0/16) to the Concentrator NVA

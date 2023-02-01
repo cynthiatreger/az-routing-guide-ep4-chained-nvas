@@ -77,7 +77,7 @@ This also reminds on the reason why, in [Epsiode #3](https://github.com/cynthiat
 
 <img width="688" alt="image" src="https://user-images.githubusercontent.com/110976272/215297079-9faf1ef6-b1d3-477c-b612-0d49563af5e1.png">
 
-## 4.2.2. Solution: Align the FW NVA data-plane (*Effective routes*) to the FW NVA control-plane (routing table)
+## 4.2.2. Solution: Align the FW NVA *Effective routes* to the FW NVA routing table
 
 Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#323solution-align-the-data-plane-effective-routes-to-the-control-plane-nva-routing-table), to enable connectivity at the Azure platform level, a *Route table* must be created (here named "NvaRT") and associated to the subnet of the FW NVA with a UDR ("toBranches") pointing to the IP address of the Concentrator NVA (Next-Hop = 10.0.10.4):
 

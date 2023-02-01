@@ -16,9 +16,9 @@
 
 [4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#43-step-2-end-to-end-connectivity-and-fw-nva-transit-between-spoke1-vnet-and-the-branches)
 
-&emsp;[4.3.1. Spoke1 => On-Prem FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#431-spoke1--on-prem-fw-transit)
+&emsp;[4.3.1. Spoke1 => On-Prem FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#431-spoke1--on-prem-fw-transit
 
-&emsp;[4.3.2. On-Prem => Spoke1 FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas-bgp#432-on-prem--spoke1-fw-transit)
+&emsp;[4.3.2. On-Prem => Spoke1 FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#432-on-prem--spoke1-fw-transit)
 ##
 # 4.1. Test environment description and expected traffic flows 
 

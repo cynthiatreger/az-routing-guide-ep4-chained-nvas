@@ -47,9 +47,7 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
 
 - Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets as well as on the Concentrator NVA subnet.
 
-## 4.2.2. FW NVA routing table vs FW NVA *Effective routes*
-
-### 4.2.2.1. NVAs routing table analysis
+## 4.2.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
 From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity. 
 
@@ -58,8 +56,6 @@ Let's consider the static routing approach and configure the FW NVA with a stati
 <img width="1128" alt="image" src="https://user-images.githubusercontent.com/110976272/216169050-7db9cb26-69ed-4230-8ca2-34898557358d.png">
 
 Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
-
- ### 4.2.1.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
 
@@ -101,13 +97,13 @@ Let's check using traceroutes that the FW NVA is in the path:
 
 <img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/216076362-fef6da09-1345-43c0-996e-e34a0fb792bd.png">
 
-Connectivity between the On-Prem and Spoke1 VNET is achieved. However only traffic from Spoke1 VNET to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute to Spoke1VM.
+Connectivity between the On-Prem and Spoke1 VNET is achieved. However only traffic from Spoke1 VNET to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute from the Concentrator NVA to Spoke1VM.
 
 :arrow_right: It’s not only about traffic from Azure to OnPrem, the On-Prem has to find the right way back to Azure too.
 
 ## 4.3.2. Align the Concentrator NVA *Effective routes* to the FW NVA routing table for On-Prem => Spoke1 FW transit
 
-Although the Concentrator NVA learns via BGP the Spoke1 range (10.1.0.0/16) **from the FW NVA**, when packets destined to Spoke1VM reach the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC *Effective routes* and forwarded over the peering to Spoke1 VNET directly.
+When packets destined to Spoke1VM reach the NIC of the Concentrator NVA, the destination (10.1.1.4) will be matched against the NIC *Effective routes* and forwarded over the peering to Spoke1 VNET directly.
 
 One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA. The "ConcentratorRT" *Route table* is updated accordingly with the "toSpoke1" UDR:
 
@@ -119,8 +115,12 @@ This completes the return traffic inspection of traffic from the On-Prem branche
 
 :arrow_right: *Default* routes overridden by UDRs become "Invalid" and a new *User* entry is added at the bottom of the *Effective routes*. 
 
-Finally both connectivity & FW insection between Azure resources and branches connected to a Concentrator NVA have been achieved!
+## 4.4. Conclusion
 
-But admittedly with quite some complexity. Fortunately there is room for improvement, as we will find out in the next Episode.
+Finally both connectivity & FW inspection between Azure resources and branches connected to a Concentrator NVA have been achieved!
+
+But admittedly with quite some complexity, with UDRs required on every subnet of every VNET in our design to match the OS routing level view.
+
+Fortunately there is room for improvement, as we will find out in the next Episode.
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)

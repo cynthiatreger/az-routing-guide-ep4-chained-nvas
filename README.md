@@ -8,7 +8,7 @@
 
 [4.2. Step1: Connectivity between the FW NVA and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#42step1-connectivity-between-the-fw-nva-and-the-branches)
 
-&emsp;[4.2.1. Connectivity recap & NVA routing](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#421-current-connectivity-recap)
+&emsp;[4.2.1. Connectivity recap & NVA routing](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#421-connectivity-recap--nva-routing)
 
 &emsp;[4.2.2. FW NVA Effective routes and FW NVA routing table misalignment](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#422-fw-nva-effective-routes-and-fw-nva-routing-table-misalignment)
 

@@ -87,7 +87,8 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 The result is successful connectivity between the FW NVA and the On-Prem branches:
 
-<img width="855" alt="image" src="https://user-images.githubusercontent.com/110976272/216340906-b768256b-646b-4aaf-ad10-cf02a618e5a7.png">
+
+<img width="824" alt="image" src="https://user-images.githubusercontent.com/110976272/216342986-b3ecfd37-36f9-4811-84e7-1a5e6a9d2ed2.png">
 
 # 4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches
 
@@ -109,7 +110,7 @@ This is achieved by associating a new *Route table* to the Spoke1 subnets, with 
 
 Let's check using traceroutes that the FW NVA is in the path:
 
-<img width="1177" alt="image" src="https://user-images.githubusercontent.com/110976272/216341351-956bf672-54e6-4d43-a0fa-158ee713d359.png">
+<img width="1193" alt="image" src="https://user-images.githubusercontent.com/110976272/216342605-3107231d-5b0d-413e-855f-76dcf9925ffe.png">
 
 Connectivity between the On-Prem and Spoke1 VNET is achieved. However only traffic from Spoke1 VNET to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute from the Concentrator NVA to Spoke1VM.
 
@@ -125,7 +126,7 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 This completes the return traffic inspection of traffic from the On-Prem branches to Spoke1VNET:
 
-<img width="1198" alt="image" src="https://user-images.githubusercontent.com/110976272/216341591-a7beb9a1-feb7-404b-be4c-30798ca248f9.png">
+<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/216342437-072c3644-6340-41bb-a339-f35cc895c623.png">
 
 :arrow_right: *Default* routes overridden by UDRs become "Invalid" and a new *User* entry is added at the bottom of the *Effective routes*. 
 

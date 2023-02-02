@@ -8,7 +8,7 @@
 
 [4.2. Step1: Connectivity between the FW NVA and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#42step1-connectivity-between-the-fw-nva-and-the-branches)
 
-&emsp;[4.2.1. Current connectivity recap](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#421-current-connectivity-recap)
+&emsp;[4.2.1. Connectivity recap & NVA routing](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#421-current-connectivity-recap)
 
 &emsp;[4.2.2. FW NVA Effective routes and FW NVA routing table misalignment](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#422-fw-nva-effective-routes-and-fw-nva-routing-table-misalignment)
 
@@ -36,7 +36,9 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
 
 # 4.2.	Step1: Connectivity between the FW NVA and the branches
 
- ## 4.2.1. Current connectivity recap
+ ## 4.2.1. Connectivity recap & NVA routing
+
+### 4.2.1.1. Episode #3 recap
 
 - Reachability between VMs within the Hub VNET and to the peered VNETs is established by default
     - the NVAs can reach each other and any VM of our test environment
@@ -49,27 +51,29 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
 
 - Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets as well as on the Concentrator NVA subnet.
 
-## 4.2.2. FW NVA *Effective routes* and FW NVA routing table misalignment
+### 4.2.1.2. NVA routing & connectivity diagram
 
 From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity.
 
-Although BGP would be more relevant in an enterprise environment for scalability consierations, for simplicity we will here consider the static routing approach and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
+Although BGP would be more relevant in an enterprise environment for scalability considerations, for simplicity we will here consider the static routing approach and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
 <img width="1128" alt="image" src="https://user-images.githubusercontent.com/110976272/216169050-7db9cb26-69ed-4230-8ca2-34898557358d.png">
 
 Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
 
-The exact same outcome would have been observed with BGP running between the FW NVA and the Concentrator NVA.
+(The exact same outcome would have been observed with BGP running between the FW NVA and the Concentrator NVA.)
+
+## 4.2.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
+
+:arrow_right: Based on the packet destination IP, an NVA via its routing table (eventually through recurive lookups) redirects traffic to its NIC*, where the *Effective routes* take over. (see [Episode #3's packet walk](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#312packet-walk)) 
+
+(\* *In the case of multiple NICs attached to an NVA, redirection to the appropriate NIC's *Effective routes* is determined by the NVA routing table.*)
 
 <img width="487" alt="image" src="https://user-images.githubusercontent.com/110976272/216169544-ef166f6d-e998-4b74-b741-d658dbd24741.png">
 
 :arrow_right: **Whatever an NVA routing configuration is (static routes, BGP etc), the NVA routing table is by default not reflected in the NVA's *Effective routes*, creating a misalignment between the NVA control plane and the NVA data-plane.**
-
-:arrow_right: Based on the packet destination IP, the NVA via its routing table (eventually through recurive lookups) redirects traffic to the NIC, where the *Effective routes* take over. (see [Episode #3's packet walk](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#312packet-walk))
-
-(:arrow_right: In the case of multiple NICs attached to an NVA, redirection to the appropriate NIC and its *Effective routes* is determined by the NVA routing table.)
 
 The FW NVA routing table containing the On-Prem branch prefixes (control-plane) and a valid next-hop to reach them is not enough, the FW NVA’s NIC must know about these On-Prem prefixes too: data-plane connectivity is currently missing.
 

@@ -4,7 +4,7 @@
 
 *Introduction note: This guide aims at providing a better understanding of the Azure routing mechanisms and how they translate from On-Prem networking. The focus will be on private routing in Hub & Spoke topologies. For clarity, network security and resiliency best practices as well as internet breakout considerations have been left out of this guide.*
 ##
-[4.1. Test environment description and expected traffic flows ](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#41-test-environment-description-and-expected-traffic-flows)
+[4.1. Test environment description and target traffic flows ](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#41-test-environment-description-and-target-traffic-flows)
 
 [4.2. Step1: Connectivity between the FW NVA and the branches](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#42step1-connectivity-between-the-fw-nva-and-the-branches)
 
@@ -20,7 +20,7 @@
 
 &emsp;[4.3.2. On-Prem => Spoke1 FW transit](https://github.com/cynthiatreger/az-routing-guide-ep4-chained-nvas#432-on-prem--spoke1-fw-transit)
 ##
-# 4.1. Test environment description and expected traffic flows 
+# 4.1. Test environment description and target traffic flows 
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having firewall inspection between the On-Prem and Azure.
 
@@ -28,7 +28,7 @@ It is possible in Azure to customize routing to for example provide FW inspectio
 
 For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
-Expected traffic flows:
+Targeted traffic flows:
 
 <img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
 

@@ -59,7 +59,7 @@ From a traditional routing perspective, static routing or BGP would have been us
 
 Although BGP would be more relevant in an enterprise environment for scalability considerations, for simplicity we will here consider the static routing approach and configure, **at FW NVA OS level**, a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
-<img width="1128" alt="image" src="https://user-images.githubusercontent.com/110976272/216169050-7db9cb26-69ed-4230-8ca2-34898557358d.png">
+<img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216337068-8b1a895c-a02d-42e8-80e1-305ada43825b.png">
 
 Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
 

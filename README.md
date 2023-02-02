@@ -65,7 +65,7 @@ Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-
 
 :arrow_right: **Whatever an NVA routing configuration is (static routes, BGP etc), the NVA routing table is by default not reflected in the NVA's *Effective routes*, creating a misalignment between the NVA control plane and the NVA data-plane.**
 
-The FW NVA routing table containing the On-Prem branch prefixes (control-plane) is not enough, the FW NVA’s NIC must know about these On-Prem prefixes too: data-plane connectivity is currently missing.
+The FW NVA routing table containing the On-Prem branch prefixes (control-plane) and a valid next-hop to reach them is not enough, the FW NVA’s NIC must know about these On-Prem prefixes too: data-plane connectivity is currently missing.
 
 ## 4.2.3. Solution: Align the FW NVA *Effective routes* to the FW NVA routing table
 
@@ -76,6 +76,8 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 The result is successful connectivity between the FW NVA and the On-Prem branches:
 
 <img width="924" alt="image" src="https://user-images.githubusercontent.com/110976272/216075824-ddd5377c-b2b2-4213-8ab9-802b9f3afb9b.png">
+
+
 
 # 4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches
 

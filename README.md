@@ -51,13 +51,15 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
 
 ## 4.2.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
-From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity. 
+From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity.
 
-Let's consider the static routing approach (router-level) and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
+Although BGP would be more relevant in an enterprise environment for scalability consierations, for simplicity we will here consider the static routing approach and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
 <img width="1128" alt="image" src="https://user-images.githubusercontent.com/110976272/216169050-7db9cb26-69ed-4230-8ca2-34898557358d.png">
 
 Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
+
+The exact same outcome would have happened with BGP running between the FW NVA and the Concentrator NVA.
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
 

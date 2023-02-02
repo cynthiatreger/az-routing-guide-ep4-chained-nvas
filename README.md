@@ -69,7 +69,7 @@ Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-
 
 :arrow_right: Based on the packet destination IP, an NVA via its routing table (eventually through recurive lookups) redirects traffic to its NIC*, where the *Effective routes* take over. (see [Episode #3's packet walk](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#312packet-walk)) 
 
-(\* *In the case of multiple NICs attached to an NVA, redirection to the appropriate NIC's *Effective routes* is determined by the NVA routing table.*)
+\* *In the case of multiple NICs attached to an NVA, redirection to the appropriate NIC's *Effective routes* is determined by the NVA routing table.*
 
 <img width="487" alt="image" src="https://user-images.githubusercontent.com/110976272/216169544-ef166f6d-e998-4b74-b741-d658dbd24741.png">
 

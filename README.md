@@ -136,6 +136,6 @@ Finally both connectivity & FW inspection between Azure resources and branches c
 
 But admittedly with quite some complexity, with UDRs required on every subnet of every VNET in our design to match the OS routing level view.
 
-Fortunately there is room for improvement, as we will find out in the next Episode.
+Fortunately there is room for improvement and ways to simplify both the deployment and the management, as we will find out in the next Episode.
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)

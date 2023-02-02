@@ -71,7 +71,7 @@ Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-
 
 \* *In the case of multiple NICs attached to an NVA, redirection to the appropriate NIC's *Effective routes* is determined by the NVA routing table.*
 
-<img width="487" alt="image" src="https://user-images.githubusercontent.com/110976272/216169544-ef166f6d-e998-4b74-b741-d658dbd24741.png">
+<img width="487" alt="image" src="https://user-images.githubusercontent.com/110976272/216313336-98182593-1dd5-44b5-a4f7-1a5541be5143.png">
 
 :arrow_right: **Whatever an NVA routing configuration is (static routes, BGP etc), the NVA routing table is by default not reflected in the NVA's *Effective routes*, creating a misalignment between the NVA control plane and the NVA data-plane.**
 

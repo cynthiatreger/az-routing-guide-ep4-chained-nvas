@@ -24,7 +24,7 @@
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having firewall inspection between the On-Prem and Azure.
 
-It is possible in Azure to customize routing to provide FW inspection to specific workloads only for example. Let's consider such filtering for Spoke1 while Spoke2 will keep bypassing the FW.
+It is possible in Azure to customize routing to provide FW inspection to specific workloads only for example. Let's consider such filtering for Spoke1, while Spoke2 will keep bypassing the FW.
 
 For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 
@@ -32,7 +32,7 @@ Targeted traffic flows:
 
 <img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
 
-The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured in Episode #3 for direct connectivity between the Azure VMs and the On-Prem via the Concentrator NVA has been dissociated from all the Spoke1 subnets as FW transit is now required for this VNET. We will see further in this article how to achieve this. The "SpokeRT" *Route table* remains associated to the Spoke2 subnets.
+As FW transit is now required for Spoke1 VNET, the "SpokeRT" *Route table* - configured in Episode #3 and containing a UDR towards the On-Prem branches pointing to the Concentrator NVA for direct On-Prem connectivity - has been dissociated from all the Spoke1 subnets. We will see further in this article how to achieve this. The "SpokeRT" *Route table* remains associated to the Spoke2 subnets.
 
 # 4.2.	Step1: Connectivity between the FW NVA and the branches
 
@@ -41,7 +41,7 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
 ### 4.2.1.1. Episode #3 recap
 
 - Reachability between VMs within the Hub VNET and to the peered VNETs is established by default
-    - the NVAs can reach each other and any VM of our test environment
+    - the NVAs can reach each other and any VM of the test environment
     - unless there are any UDRs configured, by default there won't be any connectivity further than the scope of the Hub VNETs and its Spokes
 
 - Connectivity between the Concentrator NVA and the On-Prem has been validated in Episode #3:
@@ -49,7 +49,9 @@ The UDR towards the On-Prem branches (in the "SpokeRT" *Route table*) configured
     - The Concentrator NVA routing table includes various subnets of the 192.168.0.0/16 range
     - successful pings
 
-- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets as well as on the Concentrator NVA subnet.
+- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets ("SpokeRT" *Route table* just discussed).  
+
+- The same UDR [in a different *Route table*](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#:~:text=As%20observed%20on,and%20the%20NVA.) ("ConcentratorRT") has been configured on the Concentrator NVA subnet.
 
 ### 4.2.1.2. NVA routing & connectivity diagram
 

@@ -57,7 +57,7 @@ As FW transit is now required for Spoke1 VNET, the "SpokeRT" *Route table* - con
 
 From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity.
 
-Although BGP would be more relevant in an enterprise environment for scalability considerations, for simplicity we will here consider the static routing approach and configure the FW NVA with a static route towards the On-Prem branches and pointing to the Concentrator NVA.
+Although BGP would be more relevant in an enterprise environment for scalability considerations, for simplicity we will here consider the static routing approach and configure, **at FW NVA OS level**, a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
 <img width="1128" alt="image" src="https://user-images.githubusercontent.com/110976272/216169050-7db9cb26-69ed-4230-8ca2-34898557358d.png">
 

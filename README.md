@@ -69,7 +69,7 @@ Despite the On-Prem branches being reachable from the Concentrator NVA, despite 
 
 Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
 
-:arrow_right: Based on the packet destination IP, an NVA via its routing table (eventually through recurive lookups) redirects traffic to its NIC*, where the *Effective routes* take over. (see [Episode #3's packet walk](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#312packet-walk)) 
+:arrow_right: Based on the packet destination IP, an NVA via its routing table (eventually through recursive lookups) redirects traffic to its NIC*, where the *Effective routes* take over. (see [Episode #3's packet walk](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#312packet-walk)) 
 
 \* *In the case of multiple NICs attached to an NVA, redirection to the appropriate NIC's *Effective routes* is determined by the NVA routing table.*
 

@@ -51,7 +51,7 @@ As FW transit is now required for Spoke1 VNET, the "SpokeRT" *Route table* - con
 
 - Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets ("SpokeRT" *Route table* just discussed).  
 
-- The same UDR [in a different *Route table*](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#:~:text=As%20observed%20on,and%20the%20NVA.) ("ConcentratorRT") has been configured on the Concentrator NVA subnet.
+- The same UDR in a different *Route table* ("ConcentratorRT") has been configured on the Concentrator NVA subnet.
 
 ### 4.2.1.2. NVA routing & connectivity diagram
 

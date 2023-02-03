@@ -59,7 +59,7 @@ From a traditional routing perspective, static routing or BGP would have been us
 
 Although BGP would be more relevant in an enterprise environment for scalability considerations, for simplicity we will here consider the static routing approach and configure, **at FW NVA OS level**, a static route towards the On-Prem branches and pointing to the Concentrator NVA.
 
-<img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216337068-8b1a895c-a02d-42e8-80e1-305ada43825b.png">
+<img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216485993-1da5a7c6-d6d5-40a9-8acf-c4cd7181f75f.png">
 
 Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
 
@@ -87,8 +87,7 @@ Following the learnings of [Episode #3](https://github.com/cynthiatreger/az-rout
 
 The result is successful connectivity between the FW NVA and the On-Prem branches:
 
-
-<img width="824" alt="image" src="https://user-images.githubusercontent.com/110976272/216342986-b3ecfd37-36f9-4811-84e7-1a5e6a9d2ed2.png">
+<img width="884" alt="image" src="https://user-images.githubusercontent.com/110976272/216486557-2d65d60d-d637-4e1e-a64a-cdbe7aa41bbd.png">
 
 # 4.3. Step 2: End-to-end Connectivity and FW NVA transit between Spoke1 VNET and the branches
 

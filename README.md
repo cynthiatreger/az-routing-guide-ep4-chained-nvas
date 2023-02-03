@@ -24,7 +24,7 @@
 
 The scenario used in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals) is now updated to reflect a common requirement of having firewall inspection between the On-Prem and Azure.
 
-It is possible in Azure to customize routing to provide FW inspection to specific workloads only for example. Let's consider such filtering for Spoke1, while Spoke2 will keep bypassing the FW.
+In Azure it is possible to customize routing to provide FW inspection to specific workloads only for example. Let's consider such filtering for Spoke1, while Spoke2 will keep bypassing the FW.
 
 For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subnet in the Hub VNET ("FWsubnet": 10.0.0.0/24). 
 

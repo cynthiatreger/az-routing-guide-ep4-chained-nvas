@@ -32,7 +32,7 @@ Targeted traffic flows:
 
 <img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
 
-As FW transit is now required for Spoke1 VNET, the "SpokeRT" *Route table* - configured in Episode #3 and containing a UDR towards the On-Prem branches pointing to the Concentrator NVA for direct On-Prem connectivity - has been dissociated from all the Spoke1 subnets. We will see further in this article how to achieve this. The "SpokeRT" *Route table* remains associated to the Spoke2 subnets.
+As FW transit is now required for Spoke1 VNET, the "SpokeRT" *Route table* (configured in Episode #3 and containing a UDR towards the On-Prem branches pointing to the Concentrator NVA for direct On-Prem connectivity) has been dissociated from all the Spoke1 subnets. We will see further in this article how to achieve this. The "SpokeRT" *Route table* remains associated to the Spoke2 subnets.
 
 # 4.2.	Step1: Connectivity between the FW NVA and the branches
 

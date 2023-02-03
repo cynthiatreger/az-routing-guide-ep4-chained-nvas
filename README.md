@@ -133,8 +133,12 @@ This completes the return traffic inspection of traffic from the On-Prem branche
 
 Finally both connectivity & FW inspection between Azure resources and branches connected to a Concentrator NVA have been achieved!
 
-But admittedly with quite some complexity, with UDRs required on every subnet of every VNET in our design to match the OS routing level view.
+But admittedly with quite some complexity, as UDRs are required on every subnet of every VNET, moreover in distinct *Route tables* depending on the environment (Spoke, FW, Concentrator), in order to match the OS routing level view.
+
+And of course we haven't considered the scalability, which will add up to that heaviness should there be more Spokes, more subnets, more branch prefixes but less aggregation possibilities etc.
 
 Fortunately there is room for improvement and ways to simplify both the deployment and the management, as we will find out in the next Episode.
+
+simplify implem and operation / deployment, configuration & mg
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)

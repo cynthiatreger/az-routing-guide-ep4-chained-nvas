@@ -138,7 +138,5 @@ But admittedly with quite some complexity, as UDRs are required on every subnet 
 And of course we haven't considered the scalability, which will add up to that heaviness should there be more Spokes, more subnets, more branch prefixes but less aggregation possibilities etc.
 
 Fortunately there is room for improvement and ways to simplify both the deployment and the management, as we will find out in the next Episode.
-
-simplify implem and operation / deployment, configuration & mg
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)

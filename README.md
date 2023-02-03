@@ -30,7 +30,7 @@ For this use-case, a second Cisco CSR (named "FW NVA") is deployed in a new subn
 
 Targeted traffic flows:
 
-<img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
+<img width="1011" alt="image" src="https://user-images.githubusercontent.com/110976272/216576593-98efca4f-887b-4b22-b59d-dcaaa359764d.png">
 
 We will see further in this article how to achieve FW transit for Spoke1 VNET. For now, the "SpokeRT" *Route table* (configured in Episode #3 and containing a UDR towards the On-Prem branches pointing to the Concentrator NVA for direct On-Prem connectivity) has been dissociated from all the Spoke1 subnets but remains associated to the Spoke2 subnets.
 

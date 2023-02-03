@@ -32,7 +32,7 @@ Targeted traffic flows:
 
 <img width="1022" alt="image" src="https://user-images.githubusercontent.com/110976272/216075010-e5e03d84-9ec8-4fb5-8c87-bd497f11f099.png">
 
-We will see further in tihs article how to achieve FW transit for Spoke1 VNET. For now, the "SpokeRT" *Route table* (configured in Episode #3 and containing a UDR towards the On-Prem branches pointing to the Concentrator NVA for direct On-Prem connectivity) has been dissociated from all the Spoke1 subnets but remains associated to the Spoke2 subnets.
+We will see further in this article how to achieve FW transit for Spoke1 VNET. For now, the "SpokeRT" *Route table* (configured in Episode #3 and containing a UDR towards the On-Prem branches pointing to the Concentrator NVA for direct On-Prem connectivity) has been dissociated from all the Spoke1 subnets but remains associated to the Spoke2 subnets.
 
 # 4.2.	Step1: Connectivity between the FW NVA and the branches
 
@@ -40,7 +40,7 @@ We will see further in tihs article how to achieve FW transit for Spoke1 VNET. F
 
 ### 4.2.1.1. Episode #3 recap
 
-- Reachability between VMs within the Hub VNET and to the peered VNETs is established by default
+- Reachability between VMs within the Hub VNET and to the peered VNETs is established by default:
     - the NVAs can reach each other and any VM of the test environment
     - unless there are any UDRs configured, by default there won't be any connectivity further than the scope of the Hub VNETs and its Spokes
 
@@ -49,7 +49,7 @@ We will see further in tihs article how to achieve FW transit for Spoke1 VNET. F
     - The Concentrator NVA routing table includes various subnets of the 192.168.0.0/16 range
     - successful pings
 
-- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 range pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets ("SpokeRT" *Route table* just discussed).  
+- Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 supernet pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets ("SpokeRT" *Route table* just discussed).  
 
 - The same UDR in a different *Route table* ("ConcentratorRT") has been configured on the Concentrator NVA subnet.
 
@@ -61,13 +61,13 @@ Although BGP would be more relevant in an enterprise environment for scalability
 
 <img width="1120" alt="image" src="https://user-images.githubusercontent.com/110976272/216485993-1da5a7c6-d6d5-40a9-8acf-c4cd7181f75f.png">
 
-Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
+Despite the On-Prem branches being reachable from the Concentrator NVA, despite confirmed connectivity between the Concentrator NVA and the FW NVA, and despite the FW NVA having an entry in its routing table for the traffic to On-Prem pointing to the Concentrator NVA, pings are failing.
 
 (The exact same outcome would have been observed with BGP running between the FW NVA and the Concentrator NVA.)
 
 ## 4.2.2. FW NVA *Effective routes* and FW NVA routing table misalignment
 
-Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they are not reflected on the FW NVA's *Effective routes*. 
+Just like in [Episode #3](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#322azure-vm-effective-routes-and-nva-routing-table-misalignment), although the branch routes exist in the FW NVA routing table, they don't exist in the FW NVA's *Effective routes*.
 
 :arrow_right: Based on the packet destination IP, an NVA via its routing table (eventually through recursive lookups) redirects traffic to its NIC*, where the *Effective routes* take over. (see [Episode #3's packet walk](https://github.com/cynthiatreger/az-routing-guide-ep3-nva-routing-fundamentals#312packet-walk)) 
 
@@ -95,13 +95,11 @@ Now that the connectivity between the FW NVA and the On-Prem branches via the Co
 
 ## 4.3.1. Spoke1 => On-Prem FW transit
 
-Based on the default [VNET peering rules](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) discussed in [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways), and since Spoke1 VNET has been dissociated from any *Route table* at the beginning of this article, the Spoke1 VMs don't have visibility of any IP range outside of the Spoke1 and Hub VNETs.
-
 In this Episode, we want the VMs in Spoke1 to transit via the FW NVA and the Concentrator NVA for On-Prem branches reachability, as opposed to direct access to the FW Concentrator like in Episode #3.
 
-A UDR is again required to bring the On-Prem prefixes knowledge to the Spoke1 subnets, but with the Next-Hop becoming the FW NVA.
+Based on the default [VNET peering rules](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) discussed in [Episode #1](https://github.com/cynthiatreger/az-routing-guide-ep1-vnet-peering-and-virtual-network-gateways), and since Spoke1 VNET has been dissociated from any *Route table* at the beginning of this article, the Spoke1 VMs don't have visibility of any IP range outside of the Spoke1 and Hub VNETs.
 
-This is achieved by associating a new *Route table* to the Spoke1 subnets, with a UDR for the On-Prem branches (192.168.0.0/16) pointing to the FW NVA (10.0.0.5):
+A UDR is again required to bring the On-Prem prefixes knowledge to the Spoke1 subnets, but with the Next-Hop becoming the FW NVA: a new *Route table* is associated to the Spoke1 subnets, with a UDR for the On-Prem branches (192.168.0.0/16) pointing to the FW NVA (10.0.0.5):
 
 <img width="816" alt="image" src="https://user-images.githubusercontent.com/110976272/215566526-b9afd33f-9f6e-40e3-9d2a-69b419b914e3.png">
 
@@ -123,7 +121,7 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 <img width="705" alt="image" src="https://user-images.githubusercontent.com/110976272/215595108-779f79c2-02ad-4fa5-ae25-e03860765190.png">
 
-This completes the return traffic inspection of traffic from the On-Prem branches to Spoke1VNET:
+This completes the return inspection of traffic from the On-Prem branches to Spoke1VNET:
 
 <img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/216342437-072c3644-6340-41bb-a339-f35cc895c623.png">
 
@@ -131,12 +129,12 @@ This completes the return traffic inspection of traffic from the On-Prem branche
 
 ## 4.4. Conclusion
 
-Finally both connectivity & FW inspection between Azure resources and branches connected to a Concentrator NVA have been achieved!
+Finally both connectivity & FW inspection between Azure resources and branches connected to a Concentrator NVA have been successfully completed!
 
 But admittedly with quite some complexity, as UDRs are required on every subnet of every VNET, moreover in distinct *Route tables* depending on the environment (Spoke, FW, Concentrator), in order to match the OS routing level view.
 
-And of course we haven't considered the scalability, which will add up to that heaviness should there be more Spokes, more subnets, more branch prefixes but less aggregation possibilities etc.
+And we haven't considered the scalability of this solution, which would add up to this heaviness should there be more Spokes, more subnets, more branch prefixes, less aggregation possibilities etc.
 
-Fortunately there is room for improvement and ways to simplify both the deployment and the management, as we will find out in the next Episode.
+Fortunately there is room for improvement and ways to simplify both the deployment and the management, as we will find out in the next Episode!
 ##
 ### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)

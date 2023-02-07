@@ -117,7 +117,7 @@ When packets destined to Spoke1VM reach the NIC of the Concentrator NVA, the des
 
 One last layer of UDRs is required on the Concentrator NVA to force traffic to Spoke1 VNET towards the FW NVA. The "ConcentratorRT" *Route table* is updated accordingly with the "toSpoke1" UDR:
 
-<img width="705" alt="image" src="https://user-images.githubusercontent.com/110976272/215595108-779f79c2-02ad-4fa5-ae25-e03860765190.png">
+<img width="829" alt="image" src="https://user-images.githubusercontent.com/110976272/217299758-a4d170a3-fd1e-471e-ae41-50e821cb665e.png">
 
 This completes the return inspection of traffic from the On-Prem branches to Spoke1VNET:
 

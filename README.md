@@ -51,8 +51,6 @@ We will see further in this article how to achieve FW transit for Spoke1 VNET. F
 
 - Connectivity from Spoke2 VNET to the On-Prem branches is achieved by a UDR for the 192.168.0.0/16 supernet pointing to the Concentrator NVA (Next-Hop = 10.0.10.4) and configured on the Spoke2 subnets ("SpokeRT" *Route table* just discussed).  
 
-- The same UDR in a different *Route table* ("ConcentratorRT") has been configured on the Concentrator NVA subnet.
-
 ### 4.2.1.2. NVA routing & connectivity diagram
 
 From a traditional routing perspective, static routing or BGP would have been used between the FW NVA and the Concentrator NVA for On-Prem branch connectivity.

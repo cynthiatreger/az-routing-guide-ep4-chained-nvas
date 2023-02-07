@@ -105,7 +105,7 @@ A UDR is again required to bring the On-Prem prefixes knowledge to the Spoke1 su
 
 Let's check using traceroutes that the FW NVA is in the path:
 
-<img width="1193" alt="image" src="https://user-images.githubusercontent.com/110976272/216342605-3107231d-5b0d-413e-855f-76dcf9925ffe.png">
+<img width="1151" alt="image" src="https://user-images.githubusercontent.com/110976272/217297208-f79bf523-7c03-4014-a012-71cf5e2f74da.png">
 
 Connectivity between the On-Prem and Spoke1 VNET is achieved. However only traffic from Spoke1 VNET to OnPrem is inspected by the FW, the return traffic bypasses the FW as demonstrated by the traceroute from the Concentrator NVA to Spoke1VM.
 
@@ -121,7 +121,7 @@ One last layer of UDRs is required on the Concentrator NVA to force traffic to S
 
 This completes the return inspection of traffic from the On-Prem branches to Spoke1VNET:
 
-<img width="1190" alt="image" src="https://user-images.githubusercontent.com/110976272/216342437-072c3644-6340-41bb-a339-f35cc895c623.png">
+<img width="1186" alt="image" src="https://user-images.githubusercontent.com/110976272/217298063-1b557006-75a9-4d61-8d14-6f6e4a90d170.png">
 
 :arrow_right: *Default* routes overridden by UDRs become "Invalid" and a new *User* entry is added at the bottom of the *Effective routes*. 
 

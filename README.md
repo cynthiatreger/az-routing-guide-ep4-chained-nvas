@@ -137,4 +137,4 @@ And we haven't considered the scalability of this solution, which would add up t
 
 Fortunately there is room for improvement and ways to simplify both the deployment and the management, as we will find out in the next Episode!
 ##
-### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0) (out soon)
+### [>> EPISODE #5](https://github.com/cynthiatreger/az-routing-guide-ep4-nva-routing-2-0)
